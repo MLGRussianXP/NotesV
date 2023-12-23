@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,19 +19,16 @@ public class PinAppLoginActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         SharedPreferences preferences = getSharedPreferences("app", MODE_PRIVATE);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String pin = preferences.getString("pin", null);
-                String input = etLogin.getText().toString();
+        btnLogin.setOnClickListener(v -> {
+            String pin = preferences.getString("pin", null);
+            String input = etLogin.getText().toString();
 
-                if (input.equals(pin)) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    etLogin.setError("Wrong pin!");
-                }
+            if (input.equals(pin)) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+            else {
+                etLogin.setError("Wrong pin!");
             }
         });
 

@@ -4,20 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,51 +46,42 @@ public class MainActivity extends AppCompatActivity {
         );
         listView.setAdapter(adapter);
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Delete this note");
-                builder.setMessage("Are you sure?");
+        listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Delete this note");
+            builder.setMessage("Are you sure?");
 
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int n) {
-                        data.remove(i);
-                        adapter.notifyDataSetChanged();
-
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString("notes", String.join("___", data));
-                        editor.apply();
-                    }
-                });
-
-                builder.setNegativeButton("No", null);
-
-                builder.show();
-
-                return true;
-            }
-        });
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String toAdd = etNote.getText().toString();
-
-                if (toAdd.equals(""))
-                    return;
-
-                data.add(toAdd);
+            builder.setPositiveButton("Yes", (dialogInterface, n) -> {
+                data.remove(i);
                 adapter.notifyDataSetChanged();
-                listView.smoothScrollToPosition(data.size());
 
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("notes", String.join("___", data));
                 editor.apply();
+            });
 
-                etNote.setText("");
-            }
+            builder.setNegativeButton("No", null);
+
+            builder.show();
+
+            return true;
+        });
+
+        btnAdd.setOnClickListener(v -> {
+            String toAdd = etNote.getText().toString();
+
+            if (toAdd.equals(""))
+                return;
+
+            data.add(toAdd);
+            adapter.notifyDataSetChanged();
+            listView.smoothScrollToPosition(data.size());
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("notes", String.join("___", data));
+            editor.apply();
+
+            etNote.setText("");
         });
     }
 
@@ -122,16 +109,13 @@ public class MainActivity extends AppCompatActivity {
             builder.setTitle("Clear notes");
             builder.setMessage("Are you sure?");
 
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("notes", "");
-                    editor.apply();
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("notes", "");
+                editor.apply();
 
-                    data.clear();
-                    adapter.notifyDataSetChanged();
-                }
+                data.clear();
+                adapter.notifyDataSetChanged();
             });
 
             builder.setNegativeButton("No", null);
@@ -150,12 +134,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Are you sure?");
         builder.setCancelable(false);
 
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finishAffinity();
-            }
-        });
+        builder.setPositiveButton("Yes", (dialog, which) -> finishAffinity());
 
         builder.setNegativeButton("Cancel", null);
 
