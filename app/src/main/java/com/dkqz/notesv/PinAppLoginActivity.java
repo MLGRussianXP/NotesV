@@ -20,19 +20,16 @@ public class PinAppLoginActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         SharedPreferences preferences = getSharedPreferences("app", MODE_PRIVATE);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String pin = preferences.getString("pin", null);
-                String input = etLogin.getText().toString();
+        btnLogin.setOnClickListener(v -> {
+            String pin = preferences.getString("pin", null);
+            String input = etLogin.getText().toString();
 
-                if (input.equals(pin)) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    etLogin.setError("Wrong pin!");
-                }
+            if (input.equals(pin)) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+            else {
+                etLogin.setError("Wrong pin!");
             }
         });
 
